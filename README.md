@@ -1,100 +1,64 @@
-### Analyse des Données Cinématographiques
+# Analyse de la fréquentation des cinémas français
 
-# Ce projet a pour objectif d’étudier l’impact des infrastructures des cinémas français (nombre d’écrans et de fauteuils) sur la fréquentation.
-# L’analyse cherche à dégager des insights permettant d'améliorer la fréquentation des cinémas et de créer un modèle prédictif pour estimer les entrées annuelles en fonction des infrastructures présentes.
+Quel est l'impact du nombre d'écrans et de fauteuils sur la fréquentation d'un cinéma ? Ce projet d'analyse de données explore la question sur les cinémas français (2018 à 2022) et construit un modèle prédictif des entrées annuelles.
 
-## Structure du projet
-# src/ : Dossier contenant les scripts Python pour le traitement des données, l’analyse et la modélisation.
-# nettoyage.py : Chargement et nettoyage des données.
-# analyse.py : Fonctions pour les calculs statistiques et les visualisations.
-# modelisation.py : Scripts pour entraîner et tester le modèle prédictif.
-# utilitaires.py : Fonctions auxiliaires (préparation des données, etc.).
-# donnees/ : Contient le fichier CSV des données (cinemas.csv).
-# README.md : Ce fichier, incluant la documentation et les réponses aux questions du projet.
-# requirements.txt : Liste des dépendances Python.
+## Objectifs
 
-## Données fournies
-# Le fichier cinemas.csv contient plusieurs colonnes :
-# region : Région administrative du cinéma.
-# commune : Nom de la commune.
-# population_commune : Population de la commune.
-# ecrans : Nombre d’écrans du cinéma.
-# fauteuils : Nombre total de fauteuils.
-# annee : Année de collecte des données (2018 à 2022).
-# entrees_annuelles : Nombre total d'entrées pour l'année correspondante.
-# label_art_et_essai : Indication si le cinéma a un label Art et Essai (oui/non).
+- Nettoyer et explorer les données des cinémas
+- Comparer les régions selon les entrées par fauteuil
+- Mesurer la corrélation entre infrastructures (écrans, fauteuils) et fréquentation
+- Entraîner un modèle de régression pour estimer les entrées annuelles
+- Formuler des recommandations pour une commune donnée
 
-# 1. Nettoyage et Exploration des Données
-# Nettoyage
-# Chargement des données :
-# Le fichier CSV est chargé dans un DataFrame pandas.
-# Traitement des valeurs manquantes :
-# Les valeurs manquantes dans la colonne entrees_annuelles ont été remplacées par la moyenne des entrées de la même région.
-# Les lignes contenant des valeurs aberrantes (comme des nombres d’écrans ou fauteuils égaux à zéro) ont été supprimées.
-# Justification :
-# Les valeurs manquantes ont été corrigées pour garantir la cohérence des analyses, et les anomalies ont été supprimées pour éviter toute distorsion dans les résultats.
+## Démarche
 
-# Exploration
-# Aperçu des données :
-# Les 5 premières lignes du DataFrame ont été affichées pour un premier contrôle.
-# Des statistiques descriptives ont été calculées pour les colonnes numériques :
-# Nombre moyen d’écrans : 150.
-# Nombre moyen de fauteuils : 4 200.
-# Entrées annuelles moyennes : 400 000.
+1. **Nettoyage** : chargement du CSV avec pandas, remplacement des valeurs manquantes d'`entrees_annuelles` par la moyenne de la région, suppression des valeurs aberrantes (zéro écran ou zéro fauteuil).
+2. **Analyse** : entrées moyennes par fauteuil et par région, graphiques des meilleures et des moins bonnes régions.
+3. **Corrélations** : relation entre écrans et entrées, puis entre fauteuils et entrées, avec nuages de points et droite de régression.
+4. **Modélisation** : régression linéaire avec scikit-learn. Variables explicatives : `ecrans`, `fauteuils`, `population_commune`. Variable cible : `entrees_annuelles`. Évaluation par le R² et l'erreur absolue moyenne.
+5. **Recommandations** : simulation sur une commune fictive pour comparer plusieurs scénarios d'équipement.
 
-# 2. Analyse des Données
-# Résultats principaux
-# Entrées moyennes par fauteuil en 2022 :
-# Ces valeurs ont été calculées pour chaque région.
-# Top 3 des régions avec les meilleures entrées par fauteuil :
-# Provence-Alpes-Côte d'Azur : 105 entrées par fauteuil.
-# Île-de-France : 100 entrées par fauteuil.
-# Auvergne-Rhône-Alpes : 95 entrées par fauteuil.
-# Pires régions (entrées moyennes par fauteuil) :
-# Bretagne : 69 entrées par fauteuil.
-# Centre-Val de Loire : 72 entrées par fauteuil.
-# Bourgogne-Franche-Comté : 75 entrées par fauteuil.
-# Visualisation :
-# Un graphique à barres des 10 régions avec les meilleures et les pires performances en termes d'entrées par fauteuil a été généré.
+## Résultats
 
-# 3. Corrélation entre Infrastructures et Fréquentation
-# Corrélation entre le nombre d'écrans et les entrées annuelles :
-# Le coefficient de corrélation est de 0.89, ce qui montre une forte relation positive.
-# Corrélation entre le nombre de fauteuils et les entrées annuelles :
-# Le coefficient de corrélation est de 0.86, ce qui indique également une forte relation positive.
-# Conclusion :
-# Le nombre d’écrans a une influence légèrement plus marquée sur la fréquentation que le nombre de fauteuils.
-# Visualisation :
-# Deux nuages de points avec régression linéaire ont été créés pour visualiser la relation entre ces variables et les entrées annuelles.
+- Corrélation écrans et entrées : **0,89**
+- Corrélation fauteuils et entrées : **0,86**
+- Modèle prédictif : **R² de 0,92**, erreur absolue moyenne d'environ 25 000 entrées
 
-# 4. Modèle Prédictif des Entrées Annuelles
-# Entraînement et Évaluation
-# Variables utilisées :
-# Variables explicatives : ecrans, fauteuils, population_commune.
-# Variable cible : entrees_annuelles.
-# Performance du modèle :
-# Le modèle a un coefficient de détermination (R²) de 0.92, ce qui indique une bonne capacité à expliquer la variance des entrées annuelles.
-# L'erreur moyenne absolue (MAE) est de 25 000 entrées.
-# Prédiction pour 2022 :
-# Les prédictions du modèle ont été comparées aux données réelles, avec un écart moyen inférieur à 5%, indiquant une très bonne précision.
+Le nombre d'écrans pèse donc légèrement plus sur la fréquentation que le nombre de fauteuils.
 
-# 5. Recommandations Stratégiques
-# Cas d'une commune fictive
-# Situation initiale :
-# Population : 20 000 habitants.
-# 2 écrans et 120 fauteuils.
-# Entrées prédites : 10 000.
-# Scénarios testés :
-# Augmentation à 5 écrans :
-# Entrées prédites : 18 000.
+## Données
 
-# Installation
-# Clonez ce projet avec la commande :
-# git clone https://github.com/EmiPretty/CinemaDataAnalysis.git
-# cd CinemaDataAnalysis
-# Créez un environnement virtuel :
-# python3 -m venv myenv
-# source myenv/bin/activate
-# Installez les dépendances :
-# pip install -r requirements.txt
-# pip install --upgrade scikit-learn seaborn
+Le fichier source n'est pas inclus dans le dépôt. Il est attendu dans `data/cinemas.csv`, séparateur `;`, avec les colonnes suivantes : `region`, `commune`, `population_commune`, `ecrans`, `fauteuils`, `annee`, `entrees_annuelles`, `label_art_et_essai`.
+
+## Structure
+
+```
+src/
+  nettoyage.py      chargement et nettoyage des données
+  analyse.py        calculs statistiques et graphiques
+  modelisation.py   entraînement et évaluation du modèle
+  utilitaires.py    préparation des données
+  main.py           enchaînement de l'analyse
+test_*.py           tests du nettoyage, de l'analyse, de la modélisation et du processus complet
+requirements.txt    dépendances Python
+```
+
+## Installation
+
+```bash
+git clone https://github.com/imene-be/cinema-attendance-analysis.git
+cd cinema-attendance-analysis
+python3 -m venv venv
+source venv/bin/activate
+pip install pandas matplotlib scikit-learn seaborn
+```
+
+`tkinter` est déjà fourni avec Python : il ne s'installe pas avec pip.
+
+## Technologies
+
+Python, pandas, matplotlib, seaborn, scikit-learn
+
+---
+
+Réalisé par [Imène Bentifraouine](https://imenebe.fr).
